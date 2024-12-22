@@ -1,0 +1,49 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+enum DbAction {
+  INSERT
+  UPDATE
+  DELETE
+}
+
+enum Sex {
+  Male
+  Female
+}
+
+model AuditLog {
+  id            Int      @id @default(autoincrement())
+  userId        Int //todo log user
+  tableName     String
+  recordId      Int
+  action        DbAction
+  previousState Json?
+  newState      Json?
+  timestamp     DateTime @default(now())
+}
+
+model Employee {
+  id           Int      @id @default(autoincrement())
+  name         String
+  email        String
+  phone        String
+  fullName     String
+  motherName   String
+  birthName    String?
+  birthDate    DateTime
+  placeOfBirth String
+  nationality  String   @default("Hungarian")
+  sex          Sex
+  taxId        String
+  TAJ          String
+  Address      String
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
