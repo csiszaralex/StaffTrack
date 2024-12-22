@@ -1,4 +1,4 @@
-import { INestApplication } from '@nestjs/common';
+import { INestApplication, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
 import {
@@ -12,11 +12,14 @@ import { AppModule } from './app.module';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   const configService = app.get(ConfigService);
+  const logger = new Logger('START');
   const port = configService.get('port');
 
   CreateSwagger(app);
 
-  await app.listen(port);
+  await app.listen(port, () => {
+    logger.debug(`---------- Server started on port ${port} ----------`);
+  });
 }
 
 async function CreateSwagger(app: INestApplication) {
