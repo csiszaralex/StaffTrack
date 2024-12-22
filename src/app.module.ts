@@ -5,7 +5,9 @@ import { AppService } from './app.service';
 import appConfig from './config/app.config';
 
 @Module({
-  imports: [ConfigModule.forRoot({ isGlobal: true, load: [appConfig], expandVariables: true })],
+  imports: [
+    ConfigModule.forRoot({ isGlobal: true, load: [appConfig], expandVariables: true, cache: true }),
+  ],
   controllers: [AppController],
   providers: [AppService],
 })
