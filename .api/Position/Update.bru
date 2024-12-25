@@ -1,0 +1,22 @@
+meta {
+  name: Update
+  type: http
+  seq: 4
+}
+
+patch {
+  url: {{BASE_URL}}/position/1
+  body: formUrlEncoded
+  auth: none
+}
+
+body:json {
+  {
+    "name": "waiter"
+  }
+}
+
+body:form-urlencoded {
+  name: Dev
+  description: Hihia
+}
