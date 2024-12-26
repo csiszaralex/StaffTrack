@@ -1,4 +1,5 @@
 import { type Prisma, PrismaClient } from '@prisma/client';
+import { genSaltSync, hashSync } from 'bcrypt';
 import { readFileSync } from 'fs';
 import { join } from 'path';
 
@@ -12,7 +13,16 @@ async function main() {
     employees: Prisma.EmployeeCreateManyInput[];
   };
 
-  const users = seedData.users;
+  const users = await Promise.all(
+    seedData.users.map(async user => {
+      const salt = genSaltSync();
+      return {
+        ...user,
+        password: hashSync(user.password, salt),
+        salt: salt,
+      };
+    }),
+  );
   const employees = seedData.employees;
 
   await prisma.user.createMany({ data: users });
