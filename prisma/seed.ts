@@ -8,12 +8,15 @@ async function main() {
   await prisma.employee.deleteMany({});
   const seedDataPath = join(__dirname, 'seedData.json');
   const seedData = JSON.parse(readFileSync(seedDataPath, 'utf-8')) as {
-    employees: Prisma.EmployeeCreateInput[];
+    users: Prisma.UserCreateInput[];
+    employees: Prisma.EmployeeCreateManyInput[];
   };
 
-  const tools: Prisma.EmployeeCreateInput[] = seedData.employees;
+  const users = seedData.users;
+  const employees = seedData.employees;
 
-  await prisma.employee.createMany({ data: tools });
+  await prisma.user.createMany({ data: users });
+  await prisma.employee.createMany({ data: employees });
 }
 
 main()

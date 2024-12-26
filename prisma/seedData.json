@@ -1,17 +1,40 @@
 {
+  "users": [
+    {
+      "id": 1,
+      "name": "Alex",
+      "email": "csiszaralex@gmail.com",
+      "password": "123",
+      "salt": "",
+      "role": "ADMIN"
+    },
+    {
+      "id": 2,
+      "name": "John",
+      "email": "johndoe@example.com",
+      "password": "456",
+      "salt": ""
+    },
+    {
+      "id": 3,
+      "name": "Alice",
+      "email": "alicesmith@example.com",
+      "password": "789",
+      "salt": ""
+    }
+  ],
   "employees": [
     {
       "id": 1,
-      "name": "John Doe",
-      "email": "johndoe@example.com",
+      "userId": 2,
       "phone": "+36123456789",
-      "fullName": "Johnathan Doe",
+      "fullName": "John Doe",
       "motherName": "Jane Doe",
       "birthName": "JOhn Doe",
       "birthDate": "1985-05-15T00:00:00.000Z",
       "placeOfBirth": "Budapest",
       "nationality": "Hungarian",
-      "sex": "Male",
+      "sex": "MALE",
       "taxId": "123456789",
       "TAJ": "987654321",
       "Address": "123 Main Street, Budapest, Hungary",
@@ -20,16 +43,15 @@
     },
     {
       "id": 2,
-      "name": "Alice Smith",
-      "email": "alicesmith@example.com",
+      "userId": 3,
       "phone": "+36201234567",
-      "fullName": "Alice Smith-Williams",
+      "fullName": "Alice Smith",
       "motherName": "Linda Smith",
       "birthName": "Smith",
       "birthDate": "1990-11-22T00:00:00.000Z",
       "placeOfBirth": "Debrecen",
       "nationality": "Hungarian",
-      "sex": "Female",
+      "sex": "FEMALE",
       "taxId": "234567890",
       "TAJ": "876543210",
       "Address": "456 Elm Street, Debrecen, Hungary",
@@ -37,5 +59,4 @@
       "updatedAt": "2024-12-22T12:00:00.000Z"
     }
   ]
-
 }
