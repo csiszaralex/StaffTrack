@@ -8,6 +8,7 @@ import {
   SwaggerModule,
 } from '@nestjs/swagger';
 import { AppModule } from './app.module';
+import { LoggingInterceptor } from './utils/logging.interceptor';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -25,6 +26,7 @@ async function bootstrap() {
       forbidUnknownValues: true,
     }),
   );
+  app.useGlobalInterceptors(new LoggingInterceptor());
 
   await app.listen(port, () => {
     logger.debug(`---------- Server started on port ${port} ----------`);
