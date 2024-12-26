@@ -7,7 +7,11 @@ meta {
 post {
   url: {{BASE_URL}}/position
   body: formUrlEncoded
-  auth: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{accessToken}}
 }
 
 body:json {
@@ -17,6 +21,6 @@ body:json {
 }
 
 body:form-urlencoded {
-  name: Developper
-  description: asd
+  name: Pincer
+  description: Fut az etellel
 }
