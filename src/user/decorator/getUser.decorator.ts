@@ -1,8 +1,11 @@
-import { createParamDecorator } from '@nestjs/common';
+import { createParamDecorator, InternalServerErrorException } from '@nestjs/common';
 import { IJwtPayload } from 'src/auth/interface/jwtPayload.interface';
 
-export const GetUser = createParamDecorator((data: keyof IJwtPayload, ctx) => {
-  const req = ctx.switchToHttp().getRequest();
-  const user: IJwtPayload = req.user;
-  return data ? user?.[data] : user;
+export const GetUser = createParamDecorator((key: keyof IJwtPayload, ctx) => {
+  const user: IJwtPayload = ctx.switchToHttp().getRequest().user;
+  if (!user)
+    throw new InternalServerErrorException('GetUser decorator is invoked without authGuard');
+  if (key && !user.hasOwnProperty(key))
+    throw new InternalServerErrorException(`Unknown key ${key} in GetUser decorator`);
+  return key ? user[key] : user;
 });
