@@ -18,28 +18,51 @@ enum Sex {
   FEMALE
 }
 
-//TODO: if nesesary add a role who can control some employee data
-enum Role {
-  ADMIN
-  ACCOUNTANT
-  EMPLOYEE
+enum PermissionType {
+  manage @map("MANAGE")
+  create @map("CREATE")
+  read   @map("READ")
+  update @map("UPDATE")
+  delete @map("DELETE")
 }
 
 model User {
-  id        Int       @id @default(autoincrement())
-  name      String
-  email     String    @unique
-  password  String
-  salt      String
-  role      Role      @default(EMPLOYEE)
-  employee  Employee?
-  cards     Card[]
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
+  id          Int              @id @default(autoincrement())
+  name        String
+  email       String           @unique
+  password    String
+  salt        String
+  isAdmin     Boolean          @default(false)
+  permissions UserPermission[]
+  employee    Employee?
+  cards       Card[]
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
+
+  @@index([email])
 }
 
-//TODO: for future use for NFC cards
+model Permission {
+  id          Int              @id @default(autoincrement())
+  name        String           @unique
+  description String?
+  users       UserPermission[]
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
+}
+
+model UserPermission {
+  id           Int            @id @default(autoincrement())
+  user         User           @relation(fields: [userId], references: [id])
+  userId       Int
+  permission   Permission     @relation(fields: [permissionId], references: [id])
+  permissionId Int
+  type         PermissionType
+  createdAt    DateTime       @default(now())
+}
+
 model Card {
+  //TODO: for future use for NFC cards
   id        Int      @id @default(autoincrement())
   cardId    String   @unique
   cardMac   String   @unique
@@ -51,7 +74,7 @@ model Card {
 
 model AuditLog {
   id        Int      @id @default(autoincrement())
-  userId    Int //todo log user
+  userId    Int //TODO log user
   tableName String
   recordId  Int
   action    DbAction
@@ -85,4 +108,6 @@ model Position {
   // parentPosition Position? @relation("PositionHierarchy", fields: [parentPositionId], references: [id])
   // parentPositionId Int?
   // childPositions Position[] @relation("PositionHierarchy")
+  // createdAt   DateTime @default(now())
+  // updatedAt   DateTime @updatedAt
 }
