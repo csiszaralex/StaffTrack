@@ -1,6 +1,5 @@
 import { Body, Controller, Get, Post, UseGuards } from '@nestjs/common';
-import { GetUser } from 'src/user/decorator/getUser.decorator';
-import { GetUserId } from 'src/user/decorator/getUserId.decorator';
+import { User } from 'src/user/decorator/User.decorator';
 import { AuthService } from './auth.service';
 import { Public } from './decorator/public.decorator';
 import { SignInUserDto } from './dto/signInUser.dto';
@@ -20,12 +19,12 @@ export class AuthController {
   @Post('refresh')
   @Public()
   @UseGuards(JwtRefreshGuard)
-  async refresh(@GetUserId() userId: number, @GetUser('refreshToken') rt: string) {
+  async refresh(@User('id') userId: number, @User('refreshToken') rt: string) {
     return this.authService.refresh(userId, rt);
   }
 
   @Get('me')
-  async me(@GetUser() user: any) {
+  async me(@User() user: any) {
     return user;
   }
 }

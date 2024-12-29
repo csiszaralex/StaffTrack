@@ -1,7 +1,7 @@
 import { createParamDecorator, InternalServerErrorException } from '@nestjs/common';
 import { IJwtPayload } from 'src/auth/interface/jwtPayload.interface';
 
-export const GetUser = createParamDecorator((key: keyof IJwtPayload, ctx) => {
+export const User = createParamDecorator((key: keyof IJwtPayload, ctx) => {
   const user: IJwtPayload = ctx.switchToHttp().getRequest().user;
   if (!user)
     throw new InternalServerErrorException('GetUser decorator is invoked without authGuard');
