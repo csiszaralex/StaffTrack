@@ -11,6 +11,7 @@ async function main() {
   const seedData = JSON.parse(readFileSync(seedDataPath, 'utf-8')) as {
     users: Prisma.UserCreateInput[];
     employees: Prisma.EmployeeCreateManyInput[];
+    permissions: Prisma.PermissionCreateInput[];
   };
 
   const users = await Promise.all(
@@ -23,10 +24,10 @@ async function main() {
       };
     }),
   );
-  const employees = seedData.employees;
 
   await prisma.user.createMany({ data: users });
-  await prisma.employee.createMany({ data: employees });
+  await prisma.employee.createMany({ data: seedData.employees });
+  await prisma.permission.createMany({ data: seedData.permissions });
 }
 
 main()

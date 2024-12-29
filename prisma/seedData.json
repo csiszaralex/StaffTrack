@@ -5,22 +5,36 @@
       "name": "Alex",
       "email": "csiszaralex@gmail.com",
       "password": "123",
-      "salt": "",
-      "role": "ADMIN"
+      "isAdmin": true
     },
     {
       "id": 2,
       "name": "John",
       "email": "johndoe@example.com",
-      "password": "456",
-      "salt": ""
+      "password": "456"
     },
     {
       "id": 3,
       "name": "Alice",
       "email": "alicesmith@example.com",
-      "password": "789",
-      "salt": ""
+      "password": "789"
+    }
+  ],
+  "permissions": [
+    {
+      "id": 1,
+      "name": "User",
+      "description": "Permission related to users"
+    },
+    {
+      "id": 2,
+      "name": "Employee",
+      "description": "Permission related to employees"
+    },
+    {
+      "id": 3,
+      "name": "Position",
+      "description": "Permission related to positions like new ones"
     }
   ],
   "employees": [
