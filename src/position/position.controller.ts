@@ -1,34 +1,56 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  HttpStatus,
+  NotFoundException,
+  Param,
+  ParseIntPipe,
+  Res,
+} from '@nestjs/common';
+import { Position } from '@prisma/client';
+import { Response } from 'express';
+import { DeleteAuth, GetAuth, PatchAuth, PostAuth } from 'src/auth/decorator/authMethod.decorator';
+import { AuthorizationSubject } from 'src/auth/decorator/authorizationSubject.decorator';
 import { CreatePositionDto } from './dto/createPosition.dto';
-import { PositionService } from './position.service';
 import { UpdatePositionDto } from './dto/updatePosition.dto';
+import { PositionService } from './position.service';
 
 @Controller('position')
+@AuthorizationSubject('Position')
 export class PositionController {
   constructor(private readonly positionService: PositionService) {}
 
-  @Post()
-  create(@Body() createPositionDto: CreatePositionDto) {
+  @PostAuth()
+  async create(@Body() createPositionDto: CreatePositionDto): Promise<Position> {
     return this.positionService.create(createPositionDto);
   }
 
-  @Get()
-  findAll() {
+  @GetAuth()
+  findAll(): Promise<Position[]> {
     return this.positionService.findAll();
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.positionService.findOne(+id);
+  @GetAuth(':id')
+  async findOne(@Param('id', ParseIntPipe) id: number): Promise<Position> {
+    const pos = await this.positionService.findOne(id);
+    if (!pos) throw new NotFoundException(`Position with id ${id} not found`);
+    return pos;
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updatePositionDto: UpdatePositionDto) {
-    return this.positionService.update(+id, updatePositionDto);
+  @PatchAuth(':id')
+  async update(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() updatePositionDto: UpdatePositionDto,
+  ) {
+    const pos = await this.positionService.update(id, updatePositionDto);
+    if (!pos) throw new NotFoundException(`Position with id ${id} not found`);
+    return pos;
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.positionService.remove(+id);
+  @DeleteAuth(':id')
+  async remove(@Param('id', ParseIntPipe) id: number, @Res() res: Response) {
+    const deleted = await this.positionService.remove(id);
+    if (!deleted) res.status(HttpStatus.NO_CONTENT);
+    res.send();
   }
 }

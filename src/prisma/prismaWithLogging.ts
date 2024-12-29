@@ -5,6 +5,7 @@ const prismaWithLogging = new PrismaClient().$extends({
   query: {
     $allModels: {
       $allOperations({ operation, model, args, query }) {
+        //BUG: If we call update method and the id is not exist it will drop an error
         if (
           model !== 'AuditLog' &&
           Object.values(DbAction).includes(operation.toUpperCase() as DbAction)
@@ -24,7 +25,6 @@ const prismaWithLogging = new PrismaClient().$extends({
               },
             });
           });
-
           return result;
         } else {
           return query(args);
