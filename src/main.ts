@@ -7,6 +7,7 @@ import {
   SwaggerDocumentOptions,
   SwaggerModule,
 } from '@nestjs/swagger';
+import helmet from 'helmet';
 import { AppModule } from './app.module';
 import { LoggingInterceptor } from './utils/logging.interceptor';
 
@@ -18,6 +19,7 @@ async function bootstrap() {
 
   CreateSwagger(app);
 
+  app.use(helmet());
   app.useGlobalPipes(
     new ValidationPipe({
       transform: true,
@@ -27,6 +29,7 @@ async function bootstrap() {
     }),
   );
   app.useGlobalInterceptors(new LoggingInterceptor());
+  // app.useGlobalFilters(new HttpExceptionFilter());
 
   await app.listen(port, () => {
     logger.debug(`---------- Server started on port ${port} ----------`);
@@ -36,6 +39,7 @@ async function bootstrap() {
 async function CreateSwagger(app: INestApplication) {
   const TITLE = 'StaffTracker webapp API';
   const configSW = new DocumentBuilder()
+    .addBearerAuth()
     .setTitle(TITLE)
     .setDescription("A webapplication's API for tracking staff")
     .setVersion(process.env.npm_package_version || '0.1.0')
