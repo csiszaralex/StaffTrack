@@ -1,22 +1,18 @@
-import {
-  Body,
-  Controller,
-  HttpStatus,
-  NotFoundException,
-  Param,
-  ParseIntPipe,
-  Res,
-} from '@nestjs/common';
+import { Body, HttpStatus, NotFoundException, Param, ParseIntPipe, Res } from '@nestjs/common';
 import { Position } from '@prisma/client';
 import { Response } from 'express';
-import { DeleteAuth, GetAuth, PatchAuth, PostAuth } from 'src/auth/decorator/authMethod.decorator';
-import { AuthorizationSubject } from 'src/auth/decorator/authorizationSubject.decorator';
+import {
+  AuthController,
+  DeleteAuth,
+  GetAuth,
+  PatchAuth,
+  PostAuth,
+} from 'src/auth/decorator/authMethod.decorator';
 import { CreatePositionDto } from './dto/createPosition.dto';
 import { UpdatePositionDto } from './dto/updatePosition.dto';
 import { PositionService } from './position.service';
 
-@Controller('position')
-@AuthorizationSubject('Position')
+@AuthController('Position')
 export class PositionController {
   constructor(private readonly positionService: PositionService) {}
 

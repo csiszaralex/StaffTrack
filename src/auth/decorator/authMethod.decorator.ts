@@ -1,4 +1,4 @@
-import { applyDecorators, Delete, Get, Patch, Post } from '@nestjs/common';
+import { applyDecorators, Controller, Delete, Get, Patch, Post } from '@nestjs/common';
 import {
   ApiBearerAuth,
   ApiCreatedResponse,
@@ -8,6 +8,8 @@ import {
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
 import { PermissionType } from '@prisma/client';
+import { AppSubjects } from '../casl-ability.factory';
+import { AuthorizationSubject } from './authorizationSubject.decorator';
 import { Permission } from './permission.decorator';
 
 export function swagger() {
@@ -16,6 +18,10 @@ export function swagger() {
     ApiUnauthorizedResponse({ description: 'Need to be authenticate, first login' }),
     ApiForbiddenResponse({ description: "You don't have permission for that" }),
   );
+}
+
+export function AuthController(subject: AppSubjects) {
+  return applyDecorators(Controller(subject.toString()), AuthorizationSubject(subject));
 }
 
 export function GetAuth(path?: string | string[]) {
