@@ -1,4 +1,4 @@
 import { OmitType } from '@nestjs/swagger';
-import { PositionEntityDto } from './positionEntity.dto';
+import { PositionEntity } from './position.entity';
 
-export class CreatePositionDto extends OmitType(PositionEntityDto, []) {}
+export class CreatePositionDto extends OmitType(PositionEntity, []) {}
