@@ -1,0 +1,21 @@
+meta {
+  name: Update
+  type: http
+  seq: 4
+}
+
+patch {
+  url: {{BASE_URL}}/user/:id
+  body: formUrlEncoded
+  auth: inherit
+}
+
+params:path {
+  id: 4
+}
+
+body:form-urlencoded {
+  name: Kiss Ada
+  email: kiss@ada.it
+  ~password: 555
+}

@@ -1,0 +1,16 @@
+meta {
+  name: Create
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{BASE_URL}}/permission
+  body: formUrlEncoded
+  auth: inherit
+}
+
+body:form-urlencoded {
+  name: Permission23
+  ~description: Permission for create, add or remove permissions from users
+}

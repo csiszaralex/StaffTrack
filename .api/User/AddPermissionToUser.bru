@@ -1,0 +1,16 @@
+meta {
+  name: AddPermissionToUser
+  type: http
+  seq: 11
+}
+
+put {
+  url: {{BASE_URL}}/user/permission/1
+  body: formUrlEncoded
+  auth: inherit
+}
+
+body:form-urlencoded {
+  permissionId: 1
+  type: read
+}

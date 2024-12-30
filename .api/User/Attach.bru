@@ -1,0 +1,28 @@
+meta {
+  name: Attach
+  type: http
+  seq: 9
+}
+
+post {
+  url: {{BASE_URL}}/user/attach/:id
+  body: formUrlEncoded
+  auth: inherit
+}
+
+params:path {
+  id: 2
+}
+
+body:form-urlencoded {
+  phone: +36301234567
+  fullName: Kiss Adam
+  motherName: Kiss Anya
+  birthDate: 2004-12-28T19:00:28.980Z
+  placeOfBirth: Budapest
+  nationality: Hungarian
+  sex: MALE
+  taxId: 123456789
+  TAJ: 123456789
+  Address: Budapest
+}

@@ -1,0 +1,15 @@
+meta {
+  name: Detach
+  type: http
+  seq: 8
+}
+
+post {
+  url: {{BASE_URL}}/user/detach/:id
+  body: none
+  auth: inherit
+}
+
+params:path {
+  id: 2
+}

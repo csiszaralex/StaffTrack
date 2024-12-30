@@ -1,0 +1,16 @@
+meta {
+  name: Update
+  type: http
+  seq: 5
+}
+
+patch {
+  url: {{BASE_URL}}/permission/4
+  body: formUrlEncoded
+  auth: inherit
+}
+
+body:form-urlencoded {
+  name: Permission
+  description: Permission for create, add or remove permissions from users
+}

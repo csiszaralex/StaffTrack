@@ -1,0 +1,28 @@
+meta {
+  name: CreateEmployee
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{BASE_URL}}/user/employee
+  body: formUrlEncoded
+  auth: inherit
+}
+
+body:form-urlencoded {
+  name: Adam
+  email: kiss@adia02.hu
+  password: 555
+  phone: +36301234567
+  fullName: Kiss Adam
+  motherName: Kiss Anya
+  birthDate: 2004-12-28T19:00:28.980Z
+  placeOfBirth: Budapest
+  nationality: Hungarian
+  sex: MALE
+  taxId: 123456789
+  TAJ: 123456789
+  Address: Budapest
+  ~isAdmin: true
+}
