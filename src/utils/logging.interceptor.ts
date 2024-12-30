@@ -10,11 +10,11 @@ export class LoggingInterceptor implements NestInterceptor {
     const request = context.switchToHttp().getRequest();
     const { method, url } = request;
     const body = request.body;
-    if (body.password) body.password = '***';
     const params = request.params;
 
     return next.handle().pipe(
       tap(() => {
+        if (body.password) body.password = '***';
         const duration = Date.now() - start;
         logger.verbose(
           `${method};${url};${duration}ms;${JSON.stringify(body)};${JSON.stringify(params)}`,
