@@ -1,4 +1,4 @@
-import { Body, HttpStatus, NotFoundException, Param, ParseIntPipe, Res } from '@nestjs/common';
+import { Body, HttpStatus, NotFoundException, Res } from '@nestjs/common';
 import { Position } from '@prisma/client';
 import { Response } from 'express';
 import {
@@ -11,6 +11,7 @@ import {
 import { CreatePositionDto } from './dto/createPosition.dto';
 import { UpdatePositionDto } from './dto/updatePosition.dto';
 import { PositionService } from './position.service';
+import { Id } from 'src/utils/id.decorator';
 
 @AuthController('Position')
 export class PositionController {
@@ -27,24 +28,21 @@ export class PositionController {
   }
 
   @GetAuth(':id')
-  async findOne(@Param('id', ParseIntPipe) id: number): Promise<Position> {
+  async findOne(@Id() id: number): Promise<Position> {
     const pos = await this.positionService.findOne(id);
     if (!pos) throw new NotFoundException(`Position with id ${id} not found`);
     return pos;
   }
 
   @PatchAuth(':id')
-  async update(
-    @Param('id', ParseIntPipe) id: number,
-    @Body() updatePositionDto: UpdatePositionDto,
-  ): Promise<Position> {
+  async update(@Id() id: number, @Body() updatePositionDto: UpdatePositionDto): Promise<Position> {
     const pos = await this.positionService.update(id, updatePositionDto);
     if (!pos) throw new NotFoundException(`Position with id ${id} not found`);
     return pos;
   }
 
   @DeleteAuth(':id')
-  async remove(@Param('id', ParseIntPipe) id: number, @Res() res: Response): Promise<void> {
+  async remove(@Id() id: number, @Res() res: Response): Promise<void> {
     const deleted = await this.positionService.remove(id);
     if (!deleted) res.status(HttpStatus.NO_CONTENT);
     res.send();

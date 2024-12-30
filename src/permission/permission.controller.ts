@@ -1,4 +1,4 @@
-import { Body, HttpStatus, NotFoundException, Param, ParseIntPipe, Res } from '@nestjs/common';
+import { Body, HttpStatus, NotFoundException, Res } from '@nestjs/common';
 import { Permission } from '@prisma/client';
 import { Response } from 'express';
 import {
@@ -8,6 +8,7 @@ import {
   PatchAuth,
   PostAuth,
 } from 'src/auth/decorator/authMethod.decorator';
+import { Id } from 'src/utils/id.decorator';
 import { CreatePermissionDto } from './dto/createPermission.dto';
 import { UpdatePermissionDto } from './dto/updatePermission.dto';
 import { PermissionService } from './permission.service';
@@ -27,7 +28,7 @@ export class PermissionController {
   }
 
   @GetAuth(':id')
-  async findOne(@Param('id', ParseIntPipe) id: number): Promise<Permission> {
+  async findOne(@Id() id: number): Promise<Permission> {
     const permision = await this.permissionService.findOne(id);
     if (!permision) throw new NotFoundException(`Permission with id ${id} not found`);
     return permision;
@@ -35,7 +36,7 @@ export class PermissionController {
 
   @PatchAuth(':id')
   async update(
-    @Param('id', ParseIntPipe) id: number,
+    @Id() id: number,
     @Body() updatePermissionDto: UpdatePermissionDto,
   ): Promise<Permission> {
     const permission = await this.permissionService.update(id, updatePermissionDto);
@@ -44,7 +45,7 @@ export class PermissionController {
   }
 
   @DeleteAuth(':id')
-  async remove(@Param('id', ParseIntPipe) id: number, @Res() res: Response): Promise<void> {
+  async remove(@Id() id: number, @Res() res: Response): Promise<void> {
     const deleted = await this.permissionService.remove(id);
     if (!deleted) res.status(HttpStatus.NO_CONTENT);
     res.send();
