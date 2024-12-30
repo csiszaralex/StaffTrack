@@ -7,8 +7,8 @@ import { IJwtPayload } from './interface/jwtPayload.interface';
 
 export type AppSubjects = Subjects<{
   Position: Position;
-  User: User;
   Permission: Permission;
+  User: User;
 }>;
 type AppAbility = PureAbility<[string, AppSubjects], PrismaQuery>;
 
@@ -16,12 +16,10 @@ type AppAbility = PureAbility<[string, AppSubjects], PrismaQuery>;
 export class CaslAbilityFactory {
   constructor(private readonly prisma: PrismaService) {}
 
-  async createForPosition(currentUser: IJwtPayload) {
+  async createForPosition(currentUser: IJwtPayload): Promise<AppAbility> {
     const { can, build } = new AbilityBuilder<AppAbility>(createPrismaAbility);
 
-    if (currentUser.isAdmin) {
-      can(PermissionType.manage, 'Position');
-    }
+    if (currentUser.isAdmin) can(PermissionType.manage, 'Position');
 
     const permissions = await this.prisma.userPermission.findMany({
       where: { userId: currentUser.id },
@@ -37,12 +35,33 @@ export class CaslAbilityFactory {
     return build();
   }
 
-  async createForUser(currentUser: IJwtPayload, targerUserId: number, adminRelated = false) {
-    const { can, cannot, build } = new AbilityBuilder<AppAbility>(createPrismaAbility);
+  async createForPermission(currentUser: IJwtPayload, targerUserId: number): Promise<AppAbility> {
+    const { can, build } = new AbilityBuilder<AppAbility>(createPrismaAbility);
 
-    if (currentUser.isAdmin) {
-      can(PermissionType.manage, 'User');
+    if (currentUser.isAdmin) can(PermissionType.manage, 'Permission');
+
+    const permissions = await this.prisma.userPermission.findMany({
+      where: { userId: currentUser.id },
+      include: { permission: true },
+    });
+
+    permissions.forEach(p => {
+      if (p.permission.name === 'Permission') {
+        can(p.type, 'Permission');
+      }
+    });
+
+    if (currentUser.id === targerUserId) {
+      can(PermissionType.read, 'Permission');
     }
+
+    return build();
+  }
+
+  async createForUser(currentUser: IJwtPayload, targerUserId: number): Promise<AppAbility> {
+    const { can, build } = new AbilityBuilder<AppAbility>(createPrismaAbility);
+
+    if (currentUser.isAdmin) can(PermissionType.manage, 'User');
 
     const permissions = await this.prisma.userPermission.findMany({
       where: { userId: currentUser.id },
@@ -59,14 +78,6 @@ export class CaslAbilityFactory {
       can(PermissionType.read, 'User');
       can(PermissionType.update, 'User');
     }
-
-    return build();
-  }
-
-  async createForPermission(currentUser: IJwtPayload) {
-    const { can, build } = new AbilityBuilder<AppAbility>(createPrismaAbility);
-
-    if (currentUser.isAdmin) can(PermissionType.manage, 'Permission');
 
     return build();
   }
