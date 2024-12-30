@@ -22,19 +22,20 @@
   ],
   "permissions": [
     {
-      "id": 1,
       "name": "User",
       "description": "Permission related to users"
     },
     {
-      "id": 2,
       "name": "Employee",
       "description": "Permission related to employees"
     },
     {
-      "id": 3,
       "name": "Position",
       "description": "Permission related to positions like new ones"
+    },
+    {
+      "name": "Permission",
+      "description": "Permission for create, add or remove permissions from users"
     }
   ],
   "employees": [
