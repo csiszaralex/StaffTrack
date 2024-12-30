@@ -11,21 +11,17 @@ export class PermissionService {
   async create(createPermissionDto: CreatePermissionDto): Promise<Permission> {
     return this.prisma.permission.create({ data: createPermissionDto });
   }
-
   async findAll(): Promise<Permission[]> {
     return this.prisma.permission.findMany();
   }
-
   async findOne(id: number): Promise<Permission | null> {
     return this.prisma.permission.findUnique({ where: { id } });
   }
-
   async update(id: number, updatePermissionDto: UpdatePermissionDto): Promise<Permission | null> {
     const permission = await this.findOne(id);
     if (!permission) return null;
     return this.prisma.permission.update({ where: { id }, data: updatePermissionDto });
   }
-
   async remove(id: number): Promise<boolean> {
     const permission = await this.findOne(id);
     if (!permission) return false;

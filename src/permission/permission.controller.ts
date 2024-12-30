@@ -1,40 +1,33 @@
-import { Body, HttpStatus, NotFoundException, Res } from '@nestjs/common';
+import { Body, Delete, Get, HttpStatus, NotFoundException, Patch, Post, Res } from '@nestjs/common';
 import { Permission } from '@prisma/client';
 import { Response } from 'express';
-import {
-  AuthController,
-  DeleteAuth,
-  GetAuth,
-  PatchAuth,
-  PostAuth,
-} from 'src/auth/decorator/authMethod.decorator';
+import { AuthController } from 'src/auth/decorator/authMethod.decorator';
+import { OnlyAdmin } from 'src/auth/decorator/onlyAdmin.decorator';
 import { Id } from 'src/utils/id.decorator';
 import { CreatePermissionDto } from './dto/createPermission.dto';
 import { UpdatePermissionDto } from './dto/updatePermission.dto';
 import { PermissionService } from './permission.service';
 
 @AuthController('Permission')
+@OnlyAdmin()
 export class PermissionController {
   constructor(private readonly permissionService: PermissionService) {}
 
-  @PostAuth()
+  @Post()
   async create(@Body() createPermissionDto: CreatePermissionDto): Promise<Permission> {
     return this.permissionService.create(createPermissionDto);
   }
-
-  @GetAuth()
+  @Get()
   async findAll(): Promise<Permission[]> {
     return this.permissionService.findAll();
   }
-
-  @GetAuth(':id')
+  @Get(':id')
   async findOne(@Id() id: number): Promise<Permission> {
     const permision = await this.permissionService.findOne(id);
     if (!permision) throw new NotFoundException(`Permission with id ${id} not found`);
     return permision;
   }
-
-  @PatchAuth(':id')
+  @Patch(':id')
   async update(
     @Id() id: number,
     @Body() updatePermissionDto: UpdatePermissionDto,
@@ -43,8 +36,7 @@ export class PermissionController {
     if (!permission) throw new NotFoundException(`Permission with id ${id} not found`);
     return permission;
   }
-
-  @DeleteAuth(':id')
+  @Delete(':id')
   async remove(@Id() id: number, @Res() res: Response): Promise<void> {
     const deleted = await this.permissionService.remove(id);
     if (!deleted) res.status(HttpStatus.NO_CONTENT);
