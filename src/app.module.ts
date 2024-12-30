@@ -7,6 +7,7 @@ import { AuthModule } from './auth/auth.module';
 import { AuthorizationGuard } from './auth/guard/authorization.guard';
 import { JwtGuard } from './auth/guard/jwt.guard';
 import appConfig from './config/app.config';
+import { EmployeeModule } from './employee/employee.module';
 import { PermissionModule } from './permission/permission.module';
 import { PositionModule } from './position/position.module';
 import { PrismaModule } from './prisma/prisma.module';
@@ -19,6 +20,7 @@ import { UserModule } from './user/user.module';
     PrismaModule,
     AuthModule,
     UserModule,
+    EmployeeModule,
     PermissionModule,
   ],
   controllers: [AppController],
