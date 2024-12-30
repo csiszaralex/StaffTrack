@@ -95,7 +95,7 @@ model Employee {
   taxId        String
   TAJ          String
   Address      String
-  user         User     @relation(fields: [userId], references: [id])
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId       Int      @unique
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
