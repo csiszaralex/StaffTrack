@@ -4,6 +4,7 @@ import { AuthService } from './auth.service';
 import { Public } from './decorator/public.decorator';
 import { SignInUserDto } from './dto/signInUser.dto';
 import { JwtRefreshGuard } from './guard/jwtRefresh.guard';
+import { IJwtPayload } from './interface/jwtPayload.interface';
 import { ILoginPayload } from './interface/loginPayload.interface';
 
 @Controller('auth')
@@ -19,12 +20,15 @@ export class AuthController {
   @Post('refresh')
   @Public()
   @UseGuards(JwtRefreshGuard)
-  async refresh(@User('id') userId: number, @User('refreshToken') rt: string) {
+  async refresh(
+    @User('id') userId: number,
+    @User('refreshToken') rt: string,
+  ): Promise<ILoginPayload> {
     return this.authService.refresh(userId, rt);
   }
 
   @Get('me')
-  async me(@User() user: any) {
+  async me(@User() user: IJwtPayload): Promise<IJwtPayload> {
     return user;
   }
 }

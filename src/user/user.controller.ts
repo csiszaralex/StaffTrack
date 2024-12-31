@@ -10,7 +10,7 @@ import {
   Put,
   Res,
 } from '@nestjs/common';
-import { User } from '@prisma/client';
+import { Employee, User } from '@prisma/client';
 import { Response } from 'express';
 import { DeleteAuth, GetAuth, PatchAuth, PostAuth } from 'src/auth/decorator/authMethod.decorator';
 import { AuthorizationSubject } from 'src/auth/decorator/authorizationSubject.decorator';
@@ -49,7 +49,7 @@ export class UserController {
   }
 
   @PatchAuth(':id?')
-  async updateUser(@Id() id: number, @Body() updateUserDto: UpdateUserDto) {
+  async updateUser(@Id() id: number, @Body() updateUserDto: UpdateUserDto): Promise<User> {
     const user = await this.userService.updateUser(id, updateUserDto);
     if (!user) throw new NotFoundException(`User with id ${id} not found`);
     return user;
@@ -57,7 +57,7 @@ export class UserController {
 
   //TODO: run autoclean every 30 day and remove exited users
   @DeleteAuth(':id')
-  async removeUser(@Id() id: number, @Res() res: Response) {
+  async removeUser(@Id() id: number, @Res() res: Response): Promise<void> {
     const deleted = await this.userService.removeUser(id);
     if (!deleted) res.status(HttpStatus.NO_CONTENT);
     res.send();
@@ -65,7 +65,11 @@ export class UserController {
 
   @Get('promote/:id/:value?')
   @OnlyAdmin()
-  async promoteUser(@Id() id: number, @Param('value') value: string, @Res() res: Response) {
+  async promoteUser(
+    @Id() id: number,
+    @Param('value') value: string,
+    @Res() res: Response,
+  ): Promise<void> {
     const val = !(value === 'false');
     const done = await this.userService.promoteUser(id, val);
     if (!done) res.status(HttpStatus.NO_CONTENT);
@@ -73,14 +77,17 @@ export class UserController {
   }
 
   @PostAuth('detach/:id')
-  async detachUser(@Id() id: number, @Res() res: Response) {
+  async detachUser(@Id() id: number, @Res() res: Response): Promise<void> {
     const done = await this.userService.detachUser(id);
     if (!done) res.status(HttpStatus.NO_CONTENT);
     else res.status(HttpStatus.OK);
     res.send();
   }
   @PostAuth('attach/:id')
-  async attachUser(@Id() id: number, @Body() createEmployeeDto: CreateEmployeeDto) {
+  async attachUser(
+    @Id() id: number,
+    @Body() createEmployeeDto: CreateEmployeeDto,
+  ): Promise<Employee> {
     return this.userService.attachUser(id, createEmployeeDto);
   }
 
@@ -90,7 +97,7 @@ export class UserController {
   }
 
   @GetAuth(':id')
-  async getMyUser(@Id() id: number) {
+  async getMyUser(@Id() id: number): Promise<User> {
     const user = await this.userService.findById(id);
     if (!user) throw new NotFoundException(`User with id ${id} not found`);
     return user;
@@ -104,13 +111,16 @@ export class UserController {
   @Put('permission/:id')
   @Permission('create')
   @AuthorizationSubject('Permission')
-  async assignPermission(@Id() id: number, @Body() permissionDetailDto: PermissionDetailDto) {
+  async assignPermission(
+    @Id() id: number,
+    @Body() permissionDetailDto: PermissionDetailDto,
+  ): Promise<void> {
     const p = await this.userService.assignPermissionToUser(id, permissionDetailDto);
     if (!p) throw new ConflictException('Permission already assigned');
   }
   @DeleteAuth('permission/:id')
   @AuthorizationSubject('Permission')
-  async removePermission(@Id() id: number, @Res() res: Response) {
+  async removePermission(@Id() id: number, @Res() res: Response): Promise<void> {
     const deleted = await this.userService.removePermission(id);
     if (!deleted) res.status(HttpStatus.NO_CONTENT);
     res.send();
@@ -121,7 +131,7 @@ export class UserController {
   async createPermission(
     @Id() id: number,
     @Body('permissions') permissions: PermissionDetailDto[],
-  ) {
+  ): Promise<void> {
     return this.userService.setPermissions(id, permissions);
   }
 }

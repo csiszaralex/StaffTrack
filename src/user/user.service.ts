@@ -4,7 +4,7 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { User } from '@prisma/client';
+import { Employee, User } from '@prisma/client';
 import { genSalt, hash } from 'bcrypt';
 import { CreateEmployeeDto } from 'src/employee/dto/createEmpleyee.dto';
 import { EmployeeService } from 'src/employee/employee.service';
@@ -85,7 +85,7 @@ export class UserService {
     if (!user || !user.employee?.id) return false;
     return await this.employeeService.remove(user.employee.id);
   }
-  async attachUser(id: number, createEmployeeDto: CreateEmployeeDto) {
+  async attachUser(id: number, createEmployeeDto: CreateEmployeeDto): Promise<Employee> {
     const user = await this.findById(id);
     if (!user) throw new NotFoundException(`User with id ${id} not found`);
     return this.employeeService.create(createEmployeeDto, id);
@@ -136,7 +136,7 @@ export class UserService {
     await this.prisma.userPermission.delete({ where: { id: permissionId } });
     return true;
   }
-  async setPermissions(userId: number, permissions: PermissionDetailDto[]) {
+  async setPermissions(userId: number, permissions: PermissionDetailDto[]): Promise<void> {
     const user = await this.findById(userId);
     if (!user) throw new NotFoundException(`User with id ${userId} not found`);
     await this.prisma.userPermission.deleteMany({ where: { userId } });
