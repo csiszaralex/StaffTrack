@@ -18,7 +18,6 @@ export class AuthorizationGuard implements CanActivate {
     const subject =
       this.reflector.get<AppSubjects>('subject', context.getHandler()) ||
       this.reflector.get<AppSubjects>('subject', context.getClass());
-    console.log(`${actions} ${subject}`);
     if (!actions || !subject) return true;
     const request = context.switchToHttp().getRequest();
     const paramId = parseInt(request.params.id);
