@@ -48,7 +48,7 @@ export class UserController {
     return this.userService.createUserEmployee(createUserEmployeeDto, admin);
   }
 
-  @PatchAuth(':id?')
+  @PatchAuth(':id')
   async updateUser(@Id() id: number, @Body() updateUserDto: UpdateUserDto): Promise<User> {
     const user = await this.userService.updateUser(id, updateUserDto);
     if (!user) throw new NotFoundException(`User with id ${id} not found`);
@@ -63,7 +63,7 @@ export class UserController {
     res.send();
   }
 
-  @Get('promote/:id/:value?')
+  @Get('promote/:id/{:value}')
   @OnlyAdmin()
   async promoteUser(
     @Id() id: number,
