@@ -14,7 +14,7 @@ export class LoggingInterceptor implements NestInterceptor {
 
     return next.handle().pipe(
       tap(() => {
-        if (body.password) body.password = '***';
+        if (body && body.password) body.password = '***';
         const duration = Date.now() - start;
         logger.verbose(
           `${method};${url};${duration}ms;${JSON.stringify(body)};${JSON.stringify(params)}`,
