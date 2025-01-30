@@ -20,10 +20,10 @@ export class ExcludeFieldsInterceptor implements NestInterceptor {
     );
   }
 
-  private excludeFields(data: any) {
+  private excludeFields<T extends Record<string, any>>(data: T): Partial<T> {
     if (!data || typeof data !== 'object') return data;
     const result = { ...data };
-    for (const field of this.fields) {
+    for (const field of this.fields as (keyof T)[]) {
       delete result[field];
     }
     return result;

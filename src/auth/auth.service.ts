@@ -28,18 +28,18 @@ export class AuthService {
     if (!(passwd === user.password)) throw new UnauthorizedException('Invalid credentials');
     return user;
   }
-  async generateToken(user: User): Promise<ILoginPayload> {
+  generateToken(user: User): ILoginPayload {
     const payload: IJwtPayload = {
       id: user.id,
       email: user.email,
       name: user.name,
       isAdmin: user.isAdmin,
     };
-    const accessToken = await this.jwtService.sign(payload, {
+    const accessToken = this.jwtService.sign(payload, {
       secret: this.configService.get<string>('auth.jwt.accessToken.secret'),
       expiresIn: this.configService.get<string>('auth.jwt.accessToken.expiresIn'),
     });
-    const refreshToken = await this.jwtService.sign(
+    const refreshToken = this.jwtService.sign(
       { id: user.id },
       {
         secret: this.configService.get<string>('auth.jwt.refreshToken.secret'),

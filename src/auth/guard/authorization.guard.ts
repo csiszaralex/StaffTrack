@@ -2,6 +2,7 @@ import { CanActivate, ExecutionContext, Injectable, Logger } from '@nestjs/commo
 import { Reflector } from '@nestjs/core';
 import { PermissionType } from '@prisma/client';
 import { AppSubjects, CaslAbilityFactory } from '../casl-ability.factory';
+import { RequestWithUser } from '../interface/RequestWithUser.interface';
 
 @Injectable()
 export class AuthorizationGuard implements CanActivate {
@@ -19,7 +20,7 @@ export class AuthorizationGuard implements CanActivate {
       this.reflector.get<AppSubjects>('subject', context.getHandler()) ||
       this.reflector.get<AppSubjects>('subject', context.getClass());
     if (!actions || !subject) return true;
-    const request = context.switchToHttp().getRequest();
+    const request: RequestWithUser = context.switchToHttp().getRequest();
     const paramId = parseInt(request.params.id);
 
     let ability;
@@ -30,7 +31,7 @@ export class AuthorizationGuard implements CanActivate {
     else if (subject === 'Permission')
       ability = await this.caslAbilityFactory.createForPermission(request.user, paramId);
     else {
-      this.logger.warn(`No ability for ${subject} subject`);
+      this.logger.warn(`No ability for ${typeof subject === 'string' ? subject : 'ERROR'} subject`);
       return true;
     }
     return actions.every(action => ability.can(action, subject));

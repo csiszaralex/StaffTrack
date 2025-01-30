@@ -15,7 +15,7 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   const configService = app.get(ConfigService);
   const logger = new Logger('START');
-  const port = configService.get('port');
+  const port: number = configService.get('port')!;
 
   CreateSwagger(app);
 
@@ -36,7 +36,7 @@ async function bootstrap() {
   });
 }
 
-async function CreateSwagger(app: INestApplication) {
+function CreateSwagger(app: INestApplication) {
   const TITLE = 'StaffTracker webapp API';
   const configSW = new DocumentBuilder()
     .addBearerAuth()
@@ -56,4 +56,4 @@ async function CreateSwagger(app: INestApplication) {
   SwaggerModule.setup('api', app, document, customOptions);
 }
 
-bootstrap();
+void bootstrap();

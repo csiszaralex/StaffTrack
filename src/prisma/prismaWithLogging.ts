@@ -1,10 +1,10 @@
-import { DbAction, PrismaClient } from '@prisma/client';
+import { DbAction, Prisma, PrismaClient } from '@prisma/client';
 
 const prismaWithLogging = new PrismaClient().$extends({
   name: 'Logging',
   query: {
     $allModels: {
-      $allOperations({ operation, model, args, query }) {
+      async $allOperations({ operation, model, args, query }) {
         //BUG: If we call update method and the id is not exist it will drop an error
         if (
           model !== 'AuditLog' &&
@@ -12,7 +12,8 @@ const prismaWithLogging = new PrismaClient().$extends({
         ) {
           const result = query(args);
           //TODO: Adds userId to the audit log
-          result.then(async res => {
+          await result.then(async res => {
+            if (!res) return;
             let id = -1;
             if (res && typeof res === 'object' && 'id' in res && res.id) id = res.id;
             await prismaWithLogging.auditLog.create({
@@ -21,7 +22,7 @@ const prismaWithLogging = new PrismaClient().$extends({
                 tableName: model,
                 recordId: id,
                 action: operation.toUpperCase() as DbAction,
-                newState: operation === 'delete' ? null : JSON.parse(JSON.stringify(res)),
+                newState: operation === 'delete' ? Prisma.DbNull : JSON.stringify(res),
               },
             });
           });

@@ -20,7 +20,7 @@ export function swagger() {
   );
 }
 
-export function AuthController(subject: AppSubjects) {
+export function AuthController(subject: AppSubjects & string) {
   return applyDecorators(Controller(subject.toString()), AuthorizationSubject(subject));
 }
 

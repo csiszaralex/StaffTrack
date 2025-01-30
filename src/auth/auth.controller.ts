@@ -28,7 +28,7 @@ export class AuthController {
   }
 
   @Get('me')
-  async me(@User() user: IJwtPayload): Promise<IJwtPayload> {
+  me(@User() user: IJwtPayload): IJwtPayload {
     return user;
   }
 }
