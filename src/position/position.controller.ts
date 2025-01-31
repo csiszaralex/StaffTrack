@@ -8,10 +8,10 @@ import {
   PatchAuth,
   PostAuth,
 } from 'src/auth/decorator/authMethod.decorator';
+import { Id } from 'src/utils/id.decorator';
 import { CreatePositionDto } from './dto/createPosition.dto';
 import { UpdatePositionDto } from './dto/updatePosition.dto';
 import { PositionService } from './position.service';
-import { Id } from 'src/utils/id.decorator';
 
 @AuthController('Position')
 export class PositionController {
