@@ -6,7 +6,7 @@
 
 */
 -- AlterTable
-ALTER TABLE `employee` ADD COLUMN `userId` INTEGER NULL,
+ALTER TABLE `Employee` ADD COLUMN `userId` INTEGER NULL,
     MODIFY `sex` ENUM('MALE', 'FEMALE') NOT NULL;
 
 -- CreateTable

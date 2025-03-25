@@ -5,10 +5,10 @@
 
 */
 -- DropForeignKey
-ALTER TABLE `userpermission` DROP FOREIGN KEY `UserPermission_permissionId_fkey`;
+ALTER TABLE `UserPermission` DROP FOREIGN KEY `UserPermission_permissionId_fkey`;
 
 -- DropIndex
-DROP INDEX `UserPermission_permissionId_fkey` ON `userpermission`;
+DROP INDEX `UserPermission_permissionId_fkey` ON `UserPermission`;
 
 -- CreateIndex
 CREATE UNIQUE INDEX `UserPermission_userId_permissionId_type_key` ON `UserPermission`(`userId`, `permissionId`, `type`);

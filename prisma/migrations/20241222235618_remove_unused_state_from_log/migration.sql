@@ -6,5 +6,5 @@
 
 */
 -- AlterTable
-ALTER TABLE `auditlog` DROP COLUMN `previousState`,
+ALTER TABLE `AuditLog` DROP COLUMN `previousState`,
     MODIFY `action` ENUM('CREATE', 'UPDATE', 'DELETE') NOT NULL;

@@ -5,7 +5,7 @@
 
 */
 -- AlterTable
-ALTER TABLE `user` DROP COLUMN `role`,
+ALTER TABLE `User` DROP COLUMN `role`,
     ADD COLUMN `isAdmin` BOOLEAN NOT NULL DEFAULT false;
 
 -- CreateTable

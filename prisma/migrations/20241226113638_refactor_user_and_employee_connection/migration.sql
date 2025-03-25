@@ -8,15 +8,15 @@
 
 */
 -- DropForeignKey
-ALTER TABLE `employee` DROP FOREIGN KEY `Employee_userId_fkey`;
+ALTER TABLE `Employee` DROP FOREIGN KEY `Employee_userId_fkey`;
 
 -- AlterTable
-ALTER TABLE `employee` DROP COLUMN `email`,
+ALTER TABLE `Employee` DROP COLUMN `email`,
     DROP COLUMN `name`,
     MODIFY `userId` INTEGER NOT NULL;
 
 -- AlterTable
-ALTER TABLE `user` ADD COLUMN `name` VARCHAR(191) NOT NULL;
+ALTER TABLE `User` ADD COLUMN `name` VARCHAR(191) NOT NULL;
 
 -- AddForeignKey
 ALTER TABLE `Employee` ADD CONSTRAINT `Employee_userId_fkey` FOREIGN KEY (`userId`) REFERENCES `User`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
