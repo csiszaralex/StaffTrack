@@ -7,6 +7,7 @@ import {
   SwaggerDocumentOptions,
   SwaggerModule,
 } from '@nestjs/swagger';
+import * as cookieParser from 'cookie-parser';
 import helmet from 'helmet';
 import { AppModule } from './app.module';
 import { LoggingInterceptor } from './utils/logging.interceptor';
@@ -20,6 +21,7 @@ async function bootstrap() {
   CreateSwagger(app);
 
   app.use(helmet());
+  app.use(cookieParser());
   app.useGlobalPipes(
     new ValidationPipe({
       transform: true,
@@ -30,6 +32,10 @@ async function bootstrap() {
   );
   app.useGlobalInterceptors(new LoggingInterceptor());
   // app.useGlobalFilters(new HttpExceptionFilter());
+  app.enableCors({
+    origin: 'http://localhost:3001',
+    credentials: true,
+  });
 
   await app.listen(port, () => {
     logger.debug(`---------- Server started on port ${port} ----------`);
